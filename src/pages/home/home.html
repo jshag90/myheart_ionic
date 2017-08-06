@@ -1,17 +1,20 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Home</ion-title>
+    <ion-title>나의 약품</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <h2>Welcome to Ionic!</h2>
-  <p>
-    This starter project comes with simple tabs-based layout for apps
-    that are going to primarily use a Tabbed UI.
-  </p>
-  <p>
-    Take a look at the <code>src/pages/</code> directory to add or change tabs,
-    update any existing page or create new pages.
-  </p>
+  <ion-list>
+
+     <ion-item-sliding *ngFor="let drug of drugItems">
+        <ion-item>{{drug}}</ion-item>
+
+        <ion-item-options>
+        <button ion-button expandable (click)="deleteDrugItem(drugItem)"><ion-icon name="trash"></ion-icon>약품삭제</button>
+      </ion-item-options>
+      
+     </ion-item-sliding>
+   </ion-list>
+ <button ion-button full (click)="goToAddDrugItemPage()">약품 추가</button>
 </ion-content>
