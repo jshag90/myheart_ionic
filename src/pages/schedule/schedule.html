@@ -1,28 +1,55 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>나의 스케줄</ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-title>약드세요!</ion-title>
+    </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <ion-list no-lines>
-    <ion-item>
-      <ion-label>Notify me at: </ion-label>
-      <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="notifyTime" (ionChange)="timeChange($event)"></ion-datetime>
-    </ion-item>
+    <ion-list no-lines>
+        <ion-item>
+            <ion-label>시작일</ion-label>
+            <ion-datetime displayFormat="YYYY.MM.DD" [(ngModel)]="startDate" (ionChange)="dateChange()"></ion-datetime>
+            <button ion-button clear item-end>
+                <ion-badge item-end (click)="timeAdd('start', -1)">-</ion-badge>
+                <ion-badge item-end (click)="timeAdd('start', 1)">+</ion-badge>
+            </button>
+        </ion-item>
+        <ion-item>
+            <ion-label>종료일</ion-label>
+            <ion-datetime displayFormat="YYYY.MM.DD" [(ngModel)]="endDate" (ionChange)="dateChange()"></ion-datetime>
+            <button ion-button clear item-end>
+                <ion-badge item-end (click)="timeAdd('end', -1)">-</ion-badge>
+                <ion-badge item-end (click)="timeAdd('end', 1)">+</ion-badge>
+            </button>
+        </ion-item>
+        <ion-item>
+            <h2>기간</h2>
+            <span item-end>{{ period }} 일</span>
+        </ion-item>
+        <hr>
 
-    <ion-item>
-      <ion-label>on the following days:</ion-label>
-    </ion-item>
-
-    <ion-item *ngFor="let day of days">
-      <ion-label>{{day.title}}</ion-label>
-      <ion-checkbox [(ngModel)]="day.checked" color="primary"></ion-checkbox>
-    </ion-item>
-  </ion-list>
+        <ion-grid>
+            <ion-row *ngFor="let time of timeDivisions">
+                <ion-col col-2>
+                    <ion-item>
+                        <ion-checkbox color="dark" [(ngModel)]="time.checked" checked="time.checked"></ion-checkbox>
+                    </ion-item>
+                </ion-col>
+                <ion-col class="timeLabel">
+                    {{ time.name }}
+                </ion-col>
+                <ion-col>
+                    <ion-item>
+                        <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A"
+                                      [(ngModel)]="time.time"></ion-datetime>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </ion-list>
 </ion-content>
 
 <ion-footer>
-  <button (click)="addNotifications()" ion-button color="primary" full>Schedule</button>
-  <button (click)="cancelAll()" ion-button color="danger" full>Leave me alone!</button>
+    <button (click)="addNotifications()" ion-button color="primary" full>알림 등록</button>
+    <button (click)="cancelAll()" ion-button color="dark" full>알림 해제</button>
 </ion-footer>

@@ -1,119 +1,120 @@
-import { Component } from '@angular/core';
-import { Platform, AlertController } from 'ionic-angular';
-import { LocalNotifications } from '@ionic-native/local-notifications';
+import {Component} from '@angular/core';
+import {Platform, AlertController} from 'ionic-angular';
+import {LocalNotifications} from '@ionic-native/local-notifications';
 import * as moment from 'moment';
 
 @Component({
-  selector: 'page-schedule',
-  templateUrl: 'schedule.html'
+    selector: 'page-schedule',
+    templateUrl: 'schedule.html'
 })
 export class SchedulePage {
-  notifyTime: any;
-  notifications: any[] = [];
-  days: any[];
-  chosenHours: number;
-  chosenMinutes: number;
+    startDate: string;
+    endDate: string;
+    period: number;
 
-  constructor(public platform: Platform, public alertCtrl: AlertController, public localNotifications: LocalNotifications) {
-    this.notifyTime = moment(new Date()).format();
-    this.chosenHours = new Date().getHours();
-    this.chosenMinutes = new Date().getMinutes();
+    notifications: any[] = [];
+    timeDivisions: any[];
 
-    this.days = [
-      { title: 'Monday', dayCode: 1, checked: false },
-      { title: 'Tuesday', dayCode: 2, checked: false },
-      { title: 'Wednesday', dayCode: 3, checked: false },
-      { title: 'Thursday', dayCode: 4, checked: false },
-      { title: 'Friday', dayCode: 5, checked: false },
-      { title: 'Saturday', dayCode: 6, checked: false },
-      { title: 'Sunday', dayCode: 0, checked: false }
-    ];
+    constructor(public platform: Platform, public alertCtrl: AlertController, public localNotifications: LocalNotifications) {
+        this.startDate = moment(new Date()).format();
+        this.endDate = moment(new Date()).add(2, 'days').format();
 
-    this.localNotifications.on("click", (notification, state) => {
-      let alert = this.alertCtrl.create({
-        title: 'Notifications set',
-        buttons: ['Ok']
-      });
+        // 알림 기간을 설정
+        this.dateChange();
 
-      alert.present();
-    });
-  }
+        this.timeDivisions = [
+            {name: '오전', time: '09:00', checked: true},
+            {name: '오후', time: '13:00', checked: true},
+            {name: '저녁', time: '18:00', checked: true}
+        ];
 
-  timeChange(time) {
-    this.chosenHours = time.hour;
-    this.chosenMinutes = time.minute;
-  }
+        this.localNotifications.on("click", (notification, state) => {
+            let alert = this.alertCtrl.create({
+                title: '알림이 등록되었습니다.',
+                buttons: ['Ok']
+            });
 
-  ionViewDidLoad() {
-    if (this.platform.is('cordova')) {
-      this.platform.ready().then(() => {
-        this.localNotifications.hasPermission().then(function (granted) {
-          if (!granted) {
-            // IOS10의 권한 설정
-            this.localNotifications.registerPermission();
-          }
+            alert.present();
         });
-      });
     }
-  }
 
-  addNotifications() {
-    let currentDate = new Date();
-    let currentDay = currentDate.getDay(); // Sunday = 0, Monday = 1, etc.
+    dateChange() {
+        // 스케줄 기간
+        this.period = moment(this.endDate).diff(moment(this.startDate), 'days') + 1;
+    }
 
-    for (let day of this.days) {
-      if (day.checked) {
+    timeAdd(dateDivision, add) {
+        // + - 버튼을 통한 날짜 수정
+        if ('start' === dateDivision) {
+            this.startDate = moment(this.startDate).add(add, 'days').format();
+            console.log(this.startDate);
+        }
+        else if ('end' === dateDivision) {
+            this.endDate = moment(this.endDate).add(add, 'days').format();
+        }
+    }
 
-        let firstNotificationTime = new Date();
-        let dayDifference = day.dayCode - currentDay;
-        if (dayDifference < 0) {
-          dayDifference = dayDifference + 7; // for cases where the day is in the following week
+    ionViewDidLoad() {
+        // TODO: IOS 테스트 필요
+        if (this.platform.is('cordova')) {
+            this.platform.ready().then(() => {
+                this.localNotifications.hasPermission().then(function (granted) {
+                    if (!granted) {
+                        // IOS10의 권한 설정
+                        this.localNotifications.registerPermission();
+                    }
+                });
+            });
+        }
+    }
+
+    addNotifications() {
+        // 시작일 부터 종료일까지 반복합니다.
+        for (let i = 0; i < this.period; i++) {
+            let notificationTime = moment(this.startDate).add(i, 'days').toDate();
+            for (let time of this.timeDivisions) {
+                // 선택한 시간에 푸시를 등록합니다.
+                if (time.checked) {
+                    notificationTime.setHours(time.time.substring(0, 2));
+                    notificationTime.setMinutes(time.time.substring(3));
+
+                    let notification = {
+                        title: '약드세요',
+                        text: time.name + ' 약 드실 시간입니다.',
+                        at: notificationTime
+                    };
+
+                    this.notifications.push(notification);
+                }
+            }
         }
 
-        // 해당요일만큼 날짜를 변경한다.
-        firstNotificationTime.setHours(firstNotificationTime.getHours() + (24 * (dayDifference)));
+        if (this.platform.is('cordova')) {
+            // Cancel any existing notifications
+            this.localNotifications.cancelAll().then(() => {
 
-        firstNotificationTime.setHours(this.chosenHours);
-        firstNotificationTime.setMinutes(this.chosenMinutes);
-        alert(firstNotificationTime);
+                // Schedule the new notifications
+                this.localNotifications.schedule(this.notifications);
+                this.notifications = [];
 
-        let notification = {
-          id: day.dayCode,
-          title: '약먹을 시간',
-          text: '약 드세요!!!!!',
-          at: firstNotificationTime,
-        };
+                let alert = this.alertCtrl.create({
+                    title: 'Notifications set',
+                    buttons: ['Ok']
+                });
 
-        this.notifications.push(notification);
-      }
+                alert.present();
+            });
+        }
     }
 
-    if (this.platform.is('cordova')) {
-      // Cancel any existing notifications
-      this.localNotifications.cancelAll().then(() => {
-
-        // Schedule the new notifications
-        this.localNotifications.schedule(this.notifications);
-        this.notifications = [];
+    cancelAll() {
+        this.localNotifications.cancelAll();
 
         let alert = this.alertCtrl.create({
-          title: 'Notifications set',
-          buttons: ['Ok']
+            title: '알람이 해제되었습니다.',
+            buttons: ['Ok']
         });
 
         alert.present();
-      });
     }
-  }
-
-  cancelAll() {
-    this.localNotifications.cancelAll();
-
-    let alert = this.alertCtrl.create({
-      title: 'Notifications cancelled',
-      buttons: ['Ok']
-    });
-
-    alert.present();
-  }
 }
