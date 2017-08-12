@@ -4,10 +4,25 @@ import { Injectable } from '@angular/core';
 export class DrugService {
     constructor(public storage: Storage) {
     }
-    getTodos(){
+
+    getDrugs(){
         return this.storage.get('drugItems');
     }
-    setTodos(drugItems){
+
+    setDrugs(drugItems){
         return this.storage.set('drugItems',JSON.stringify(drugItems));
     }
+
+    setWeekDaysByDrugName(drugName,weekDaysByDrug){
+        return this.storage.set(drugName,JSON.stringify(weekDaysByDrug));
+
+    }
+
+    getWeekDaysByDrugName(drugName){
+        return this.storage.get(drugName);
+    }
+
+
+
+
 }

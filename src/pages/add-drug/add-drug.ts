@@ -26,7 +26,7 @@ export class AddDrugPage {
 
     this.drugItems.push(this.newDrug);
 
-    this.drugService.setTodos(this.drugItems).then(res=>{
+    this.drugService.setDrugs(this.drugItems).then(res=>{
       return console.log('New item added.');
     });
     //현재 창을 닫고 home 뷰로 돌아간다.

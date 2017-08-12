@@ -8,4 +8,23 @@
 
 <ion-content padding>
 
+<ion-list>
+
+  <ion-item>
+    <ion-label>약품명</ion-label>
+    <ion-input type="text" value={{drugName}}></ion-input>
+    
+  </ion-item>
+
+  <ion-item>
+    <ion-label>알람요일</ion-label>
+    <ion-input expandable type="text" [(ngModel)]='weekDays'></ion-input>
+   
+  </ion-item>
+
+</ion-list>
+
+
+<button ion-button block  (click)="saveWeekDays(drugName)">저장</button>
+저장된 요일 정보 : {{selectWeekDaysByDrugName}}
 </ion-content>
