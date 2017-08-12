@@ -1,6 +1,5 @@
 {
-  "name": "tab",
-  "app_id": "",
-  "v2": true,
-  "typescript": true
+    "name": "약드세요",
+    "app_id": "",
+    "type": "ionic-angular"
 }
