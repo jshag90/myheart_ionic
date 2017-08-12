@@ -88,6 +88,8 @@ export class SchedulePage {
                 }
             }
         }
+        
+                console.log(this.notifications);
 
         if (this.platform.is('cordova')) {
             // Cancel any existing notifications
