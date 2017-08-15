@@ -29,10 +29,10 @@
         <hr>
 
         <ion-grid>
-            <ion-row *ngFor="let time of timeDivisions">
+            <ion-row *ngFor="let time of timeDivisions; let i = index">
                 <ion-col col-2>
                     <ion-item>
-                        <ion-checkbox color="dark" [(ngModel)]="time.checked" checked="time.checked"></ion-checkbox>
+                        <ion-checkbox color="dark" [(ngModel)]="time.checked " checked="time.checked"></ion-checkbox>
                     </ion-item>
                 </ion-col>
                 <ion-col class="timeLabel">
@@ -40,13 +40,19 @@
                 </ion-col>
                 <ion-col>
                     <ion-item>
-                        <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A"
-                                      [(ngModel)]="time.time"></ion-datetime>
+                        <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="time.time"></ion-datetime>
                     </ion-item>
+                </ion-col>
+                <ion-col col-1>
+                    <button ion-button clear item-end>
+                        <ion-badge item-end (click)="removeTimeDivision(i)">-</ion-badge>
+                    </button>
                 </ion-col>
             </ion-row>
         </ion-grid>
+
     </ion-list>
+    <button (click)="addTimeDivision()" ion-button color="light" full>+</button>
 </ion-content>
 
 <ion-footer>

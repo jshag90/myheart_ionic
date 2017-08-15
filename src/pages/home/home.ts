@@ -4,6 +4,7 @@ import { NavController } from 'ionic-angular';
 import { AddDrugPage } from '../add-drug/add-drug';
 import { DrugService } from '../services/drug.service';
 import { AboutPage } from '../about/about';
+import { SchedulePage } from '../schedule/schedule';
 
 @Component({
   selector: 'page-home',
@@ -13,33 +14,33 @@ export class HomePage {
 
   drugItems: any[];
 
-  constructor(public navCtrl: NavController,private drugService:DrugService
+  constructor(public navCtrl: NavController, private drugService: DrugService
   ) {
-     this.drugService.getDrugs().then(res=>{
+    this.drugService.getDrugs().then(res => {
       this.drugItems = JSON.parse(res) || [];
     });
   }
 
-  goToAddDrugItemPage(){
+  goToAddDrugItemPage() {
 
-    this.navCtrl.push(AddDrugPage,{drugItems:this.drugItems});
+    this.navCtrl.push(AddDrugPage, { drugItems: this.drugItems });
 
   }
 
-  deleteDrugItem(drugItem){
+  deleteDrugItem(drugItem) {
 
-    console.log('선택한 약품'+JSON.stringify(drugItem))
-    this.drugItems = this.drugItems.filter((res)=>res !== drugItem);
+    console.log('선택한 약품' + JSON.stringify(drugItem))
+    this.drugItems = this.drugItems.filter((res) => res !== drugItem);
 
-    this.drugService.setDrugs(this.drugItems).then(res=>{
+    this.drugService.setDrugs(this.drugItems).then(res => {
       this.drugItems = JSON.parse(res) || [];
     });
 
   }
 
-  goToSchedulePage(drugItem){
-    console.log('선택한 약품'+JSON.stringify(drugItem))
-    this.navCtrl.push(AboutPage,{DrugName:drugItem});
+  goToSchedulePage(drugItem) {
+    console.log('선택한 약품' + JSON.stringify(drugItem))
+    this.navCtrl.push(SchedulePage, { prescriptionName: drugItem });
 
   }
 
