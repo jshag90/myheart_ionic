@@ -6,12 +6,17 @@ import { AddDrugPage } from '../add-drug/add-drug';
 import { SchedulePage } from '../schedule/schedule';
 import { DrugService } from '../services/drug.service';
 
+import { AboutPage } from '../about/about';
+
+
+
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
   perscriptionName: any[];
+
 
   constructor(
     public navCtrl: NavController,
@@ -37,14 +42,16 @@ export class HomePage {
       });
       alert.present();
 
+
     });
-    
+
   }
 
   //네비게이션 컨트롤러 기능 설정
   goToAddDrugPage() {
     this.navCtrl.push(AddDrugPage, { PerscriptionName: this.perscriptionName });
   }
+
 
   goToSchedulePage(perscriptionName) {
     console.log(perscriptionName)
@@ -57,6 +64,7 @@ export class HomePage {
     this.DrugService.setPerscriptions(this.perscriptionName).then(res => {
       this.perscriptionName = JSON.parse(res) || [];
     });
+
 
   }
 

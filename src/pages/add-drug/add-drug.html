@@ -15,8 +15,11 @@
 
 <ion-content padding>
   <ion-item>
+
     <ion-input placeholder="추가할 처방전을 입력해주세요." [(ngModel)]='newPerscriptionName'></ion-input>
+
   </ion-item>
+
 
 
   <ion-row *ngFor="let newDrug of newDrugNameArr; let i = index">
@@ -39,6 +42,7 @@
 
   <!--<div [innerHTML]="html">
   </div>-->
+
 
 
 

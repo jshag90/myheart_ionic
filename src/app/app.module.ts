@@ -16,6 +16,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 
 import { DrugService } from '../pages/services/drug.service';
+import { ScheduleService } from '../pages/services/schedule.service';;
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { DrugService } from '../pages/services/drug.service';
     StatusBar,
     SplashScreen,
     DrugService,
+    ScheduleService,
     LocalNotifications,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
