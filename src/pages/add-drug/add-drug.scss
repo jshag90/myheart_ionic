@@ -1,3 +1,29 @@
 page-add-drug {
 
+    table_attribute {
+        ion-col {
+          text-align: center;
+        }
+        ion-col.col {
+          border-style: outset;
+          p {
+            border-style: groove;
+            border-top-width: 0;
+            border-left-width: 0;
+            border-right-width: 0;
+            border-bottom-width: 1px;
+            margin-top: 5px;
+          }
+          strong {
+            font-size: 15px;
+            letter-spacing: 5px;
+            font-variant: small-caps;
+            font-style: italic;
+            color: #535f99;
+          }
+        }
+      }
+
 }
+
+

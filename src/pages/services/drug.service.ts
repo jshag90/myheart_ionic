@@ -4,25 +4,22 @@ import { Injectable } from '@angular/core';
 export class DrugService {
     constructor(public storage: Storage) {
     }
-
-    getDrugs(){
-        return this.storage.get('drugItems');
+    getPerscriptions() {
+        return this.storage.get('perscriptions');
+    }
+    setPerscriptions(perscriptions) {
+        return this.storage.set('perscriptions', JSON.stringify(perscriptions));
     }
 
-    setDrugs(drugItems){
-        return this.storage.set('drugItems',JSON.stringify(drugItems));
+    getDrugsByPer(perscriptions) {
+        return this.storage.get(perscriptions);
     }
 
-    setWeekDaysByDrugName(drugName,weekDaysByDrug){
-        return this.storage.set(drugName,JSON.stringify(weekDaysByDrug));
-
+    setDrugsByPer(perscriptions, drugs) {
+        console.log('추가 처방전 :' + JSON.stringify(perscriptions));
+        console.log('추가 약품 :' + JSON.stringify(drugs));
+        return this.storage.set(perscriptions, JSON.stringify(drugs));
     }
-
-    getWeekDaysByDrugName(drugName){
-        return this.storage.get(drugName);
-    }
-
-
 
 
 }

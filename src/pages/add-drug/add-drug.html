@@ -1,5 +1,5 @@
 <!--
-  Generated template for the AddDrug page.
+  Generated template for the AddItem page.
 
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>약품 추가</ion-title>
+    <ion-title>처방전 입력</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -15,8 +15,31 @@
 
 <ion-content padding>
   <ion-item>
-    <ion-input placeholder="추가할 처방전명을 입력해주세요." [(ngModel)]='newDrug' value={{}}></ion-input>
+    <ion-input placeholder="추가할 처방전을 입력해주세요." [(ngModel)]='newPerscriptionName'></ion-input>
   </ion-item>
-  <button ion-button full (click)="saveDrug()">약품저장</button>
+
+
+  <ion-row *ngFor="let newDrug of newDrugNameArr; let i = index">
+
+    <ion-item>
+      <ion-input placeholder="추가할 약품명({{i+1}})을 입력해주세요." [(ngModel)]='newDrugNameArr[i]'> {{newDrug}}</ion-input>
+    </ion-item>
+
+    <ion-fab top right>
+      <ion-badge item-end (click)="deleteDrug(i)">-</ion-badge>
+    </ion-fab>
+
+  </ion-row>
+  <button ion-button full (click)="save()">저장</button>
+
+  <ion-fab top right>
+    <ion-badge item-end (click)="addMore()">+</ion-badge>
+  </ion-fab>
+
+
+  <!--<div [innerHTML]="html">
+  </div>-->
+
+
 
 </ion-content>
