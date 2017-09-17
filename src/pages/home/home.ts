@@ -6,6 +6,7 @@ import { AddDrugPage } from '../add-drug/add-drug';
 import { SchedulePage } from '../schedule/schedule';
 import { DrugService } from '../services/drug.service';
 
+
 import { AboutPage } from '../about/about';
 
 
@@ -16,7 +17,6 @@ import { AboutPage } from '../about/about';
 })
 export class HomePage {
   perscriptionName: any[];
-
 
   constructor(
     public navCtrl: NavController,
@@ -49,13 +49,13 @@ export class HomePage {
 
   //네비게이션 컨트롤러 기능 설정
   goToAddDrugPage() {
-    this.navCtrl.push(AddDrugPage, { PerscriptionName: this.perscriptionName });
+    this.navCtrl.push(AddDrugPage);
   }
 
 
   goToSchedulePage(perscriptionName) {
     console.log(perscriptionName)
-    this.navCtrl.push(SchedulePage, { PerscriptionName: perscriptionName });
+    this.navCtrl.push(AddDrugPage, { PerscriptionName: this.perscriptionName });
   }
 
   deleteDrug(perscriptionName) {

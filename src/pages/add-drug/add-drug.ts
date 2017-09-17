@@ -27,14 +27,16 @@ export class AddDrugPage {
     public navParams: NavParams,
     private drugService: DrugService) {
 
-    this.newDrugNameArr = [''];
+    // this.navParams.data.PerscriptionName -> storage
+    // 약품이름
+    this.newDrugNameArr = [];
   }
 
   //@ViewChild('dataContainer') dataContainer: ElementRef;
 
   addMore() {
     //this.html += ' <ion-button>test</ion-button> ';
-    this.newDrugNameArr.push('');
+    this.newDrugNameArr.push({});
 
   }
 
@@ -47,6 +49,18 @@ export class AddDrugPage {
     //확인차원에서 넘겨받은 items 값을 콘솔에 표시해본다.
     //home.ts에서 넘겨 받은 파라미터 키값이랑 같아야함.
     console.log(this.navParams.data.PerscriptionName);
+    this.newPerscriptionName = this.navParams.data.PerscriptionName;
+    console.log(this.drugService.getDrugsByPer(this.navParams.data.PerscriptionName));
+
+    if (this.navParams.data.PerscriptionName) {
+      this.drugService.getDrugsByPer(this.navParams.data.PerscriptionName).then(res => {
+
+        let drug = JSON.parse(res).toString();
+        console.log(typeof JSON.parse(res));
+        this.newDrugNameArr = drug.split(",");
+
+      });
+    }
   }
 
   save() {

@@ -7,8 +7,8 @@
 </ion-header>
 
 <ion-content padding>
-   <button ion-button full (click)="goToAddDrugPage()">처방전 추가</button>
-   <ion-list>
+  <button ion-button full (click)="goToAddDrugPage()">처방전 추가</button>
+  <ion-list>
     <ion-item-sliding *ngFor="let perscriptionName of perscriptionName">
 
       <ion-item expandable (click)="goToSchedulePage(perscriptionName)">{{perscriptionName}}</ion-item>
@@ -21,6 +21,9 @@
     </ion-item-sliding>
   </ion-list>
 
-  
- 
+
+
+
+
+
 </ion-content>
