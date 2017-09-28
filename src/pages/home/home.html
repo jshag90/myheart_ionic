@@ -1,29 +1,24 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>
-      처방전 등록
-    </ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-title>
+            처방전 등록
+        </ion-title>
+    </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <button ion-button full (click)="goToAddDrugPage()">처방전 추가</button>
-  <ion-list>
-    <ion-item-sliding *ngFor="let perscriptionName of perscriptionName">
-
-      <ion-item expandable (click)="goToSchedulePage(perscriptionName)">{{perscriptionName}}</ion-item>
-
-      <ion-item-options>
-        <button ion-button expandable (click)="deleteDrug(perscriptionName)"><ion-icon name="trash"></ion-icon>Delete</button>
-        <button ion-button expandable (click)="alertDrugInfoByPer(perscriptionName)"><ion-icon name="trash"></ion-icon>약품정보</button>
-      </ion-item-options>
-
-    </ion-item-sliding>
-  </ion-list>
-
-
-
-
-
-
+    <button ion-button full (click)="goToSchedulePage()">처방전 추가</button>
+    <ion-list>
+        <ion-item-sliding *ngFor="let prescription of perscriptions">
+            <ion-item expandable (click)="goToSchedulePage(prescription)">{{prescription}}</ion-item>
+            <ion-item-options>
+                <button ion-button expandable (click)="deleteDrug(prescription)">
+                    <ion-icon name="trash"></ion-icon>Delete
+                </button>
+                <button ion-button expandable (click)="alertDrugInfoByPer(prescription)">
+                    <ion-icon name="trash"></ion-icon>약품정보
+                </button>
+            </ion-item-options>
+        </ion-item-sliding>
+    </ion-list>
 </ion-content>

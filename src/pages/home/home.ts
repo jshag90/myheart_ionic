@@ -2,70 +2,49 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { AlertController } from 'ionic-angular';
 
-import { AddDrugPage } from '../add-drug/add-drug';
 import { SchedulePage } from '../schedule/schedule';
 import { DrugService } from '../services/drug.service';
 
-
-import { AboutPage } from '../about/about';
-
-
-
 @Component({
-  selector: 'page-home',
-  templateUrl: 'home.html'
+    selector: 'page-home',
+    templateUrl: 'home.html'
 })
 export class HomePage {
-  perscriptionName: any[];
+    perscriptions: string[];
 
-  constructor(
-    public navCtrl: NavController,
-    private DrugService: DrugService,
-    public alertCtrl: AlertController
-  ) {
-    //this.items = ["Eat lunch","Walk the dog","Watch movie"];
-    this.DrugService.getPerscriptions().then(res => {
-      this.perscriptionName = JSON.parse(res) || [];
-    });
+    constructor(
+        public navCtrl: NavController,
+        private drugService: DrugService,
+        public alertCtrl: AlertController
+    ) {
+        this.drugService.getPerscriptions().then(res => {
+            this.perscriptions = res || [];
+        });
+    }
 
-  }
+    alertDrugInfoByPer(perscriptionName) {
+        console.log("선택한 처방전 이름 : " + JSON.stringify(perscriptionName));
+        this.drugService.getPrescription(perscriptionName).then(res => {
+            //alert(res);
+            let alert = this.alertCtrl.create({
+                title: '약품정보',
+                subTitle: res,
+                buttons: ['OK']
+            });
+            alert.present();
+        });
+    }
 
-  alertDrugInfoByPer(perscriptionName) {
-    console.log("선택한 처방전 이름 : " + JSON.stringify(perscriptionName));
+    //네비게이션 컨트롤러 기능 설정
+    goToSchedulePage(prescriptionName) {
+        this.navCtrl.push(SchedulePage, { prescriptionName : prescriptionName});
+    }
 
-    this.DrugService.getDrugsByPer(perscriptionName).then(res => {
-      //alert(res);
-      let alert = this.alertCtrl.create({
-        title: '약품정보',
-        subTitle: res,
-        buttons: ['OK']
-      });
-      alert.present();
+    deleteDrug(perscriptionName) {
+        // this.perscriptionName = this.perscriptionName.filter((res) => res !== perscriptionName);
 
-
-    });
-
-  }
-
-  //네비게이션 컨트롤러 기능 설정
-  goToAddDrugPage() {
-    this.navCtrl.push(AddDrugPage);
-  }
-
-
-  goToSchedulePage(perscriptionName) {
-    console.log(perscriptionName)
-    this.navCtrl.push(AddDrugPage, { PerscriptionName: this.perscriptionName });
-  }
-
-  deleteDrug(perscriptionName) {
-    this.perscriptionName = this.perscriptionName.filter((res) => res !== perscriptionName);
-
-    this.DrugService.setPerscriptions(this.perscriptionName).then(res => {
-      this.perscriptionName = JSON.parse(res) || [];
-    });
-
-
-  }
-
+        // this.DrugService.setPerscriptions(this.perscriptionName).then(res => {
+        //     this.perscriptionName = JSON.parse(res) || [];
+        // });
+    }
 }

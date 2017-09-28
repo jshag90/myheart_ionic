@@ -1,25 +1,24 @@
 import { Storage } from '@ionic/storage';
 import { Injectable } from '@angular/core';
+
 @Injectable()
 export class DrugService {
     constructor(public storage: Storage) {
     }
+
+    clearStorage() {
+        return this.storage.clear();
+    }
+
     getPerscriptions() {
-        return this.storage.get('perscriptions');
-    }
-    setPerscriptions(perscriptions) {
-        return this.storage.set('perscriptions', JSON.stringify(perscriptions));
+        return this.storage.keys();
     }
 
-    getDrugsByPer(perscriptions) {
-        return this.storage.get(perscriptions);
+    getPrescription(prescriptionName) {
+        return this.storage.get(prescriptionName);
     }
 
-    setDrugsByPer(perscriptions, drugs) {
-        console.log('추가 처방전 :' + JSON.stringify(perscriptions));
-        console.log('추가 약품 :' + JSON.stringify(drugs));
-        return this.storage.set(perscriptions, JSON.stringify(drugs));
+    setPrescription(prescriptionName, prescription) {
+        return this.storage.set(prescriptionName, JSON.stringify(prescription));
     }
-
-
 }
