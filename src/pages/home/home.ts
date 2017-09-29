@@ -16,7 +16,9 @@ export class HomePage {
         public navCtrl: NavController,
         private drugService: DrugService,
         public alertCtrl: AlertController
-    ) {
+    ) {}
+    
+    ionViewWillEnter() {
         this.drugService.getPerscriptions().then(res => {
             this.perscriptions = res || [];
         });
@@ -25,7 +27,6 @@ export class HomePage {
     alertDrugInfoByPer(perscriptionName) {
         console.log("선택한 처방전 이름 : " + JSON.stringify(perscriptionName));
         this.drugService.getPrescription(perscriptionName).then(res => {
-            //alert(res);
             let alert = this.alertCtrl.create({
                 title: '약품정보',
                 subTitle: res,

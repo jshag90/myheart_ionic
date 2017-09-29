@@ -19,6 +19,7 @@ export class SchedulePage {
 
     notifications: any[] = [];
     timeDivisions: any[];
+    notificationIds: number[] = [];
 
     prescriptionName: string;
 
@@ -26,7 +27,7 @@ export class SchedulePage {
     constructor(public navCtrl: NavController, public navParams: NavParams, public platform: Platform, public alertCtrl: AlertController, public localNotifications: LocalNotifications,
         private drugService: DrugService) {
         // 초기값 셋팅
-        this.prescriptionName = '나의 처방전';
+        this.prescriptionName = '';
         this.drugs = [{}];
         this.startDate = moment(new Date()).format();
         this.endDate = moment(new Date()).add(2, 'days').format();
@@ -49,6 +50,7 @@ export class SchedulePage {
                     this.startDate = schedule.startDate;
                     this.timeDivisions = schedule.timeDivisions;
                     this.drugs = schedule.drugs;
+                    this.notificationIds = schedule.notificationIds;
                 }
             });
         }
@@ -122,26 +124,12 @@ export class SchedulePage {
 
         // 해당 처방전의 중복을 체크합니다.
         this.drugService.getPrescription(this.prescriptionName).then(res => {
-            let drug = JSON.parse(res);
-
-            if(drug && !confirm('해당 처방전이 존재합니다. 수정하시겠습니까?')) {
+            if(res && !confirm('해당 처방전이 존재합니다. 수정하시겠습니까?')) {
                 return false;
             }
 
-            // 값들을 DB에 저장합니다.
-            const prescription = {
-                'startDate': this.startDate,
-                'endDate': this.endDate,
-                'timeDivisions': this.timeDivisions,
-                'drugs' : this.drugs || [{}]
-            }
-
-            this.drugService.setPrescription(this.prescriptionName, prescription).then(() => {
-                console.log('setSchedule');
-            });
-
             // 시작일 부터 종료일까지 반복합니다.
-            for (let i = 0; i < this.period; i++) {
+            for (let i = 0, j=0; i < this.period; i++) {
                 let notificationTime = moment(this.startDate).add(i, 'days').toDate();
                 for (let time of this.timeDivisions) {
                     // 선택한 시간에 푸시를 등록합니다.
@@ -149,30 +137,48 @@ export class SchedulePage {
                         notificationTime.setHours(time.time.substring(0, 2));
                         notificationTime.setMinutes(time.time.substring(3));
 
-                        let notification = {
-                            title: '약드세요',
-                            text: time.name + ' 약 드실 시간입니다.',
-                            at: notificationTime
-                        };
+                        // 지금 시간 이후 알람만 등록합니다.
+                        if(moment().toDate() <= notificationTime) {
+                            let notificationId = this.hashFunction(this.prescriptionName) + j++;
+                            this.notificationIds.push(notificationId);
 
-                        this.notifications.push(notification);
+                            let notification = {
+                                id : notificationId,
+                                title: '약드세요',
+                                text: time.name + ' 약 드실 시간입니다.',
+                                at: notificationTime
+                            };
+
+                            this.notifications.push(notification);
+                        }
                     }
                 }
             }
 
-            if (this.platform.is('cordova')) {
-                // Cancel any existing notifications
-                this.localNotifications.cancelAll().then(() => {
+            // 값들을 DB에 저장합니다.
+            const prescription = {
+                'startDate': this.startDate,
+                'endDate': this.endDate,
+                'timeDivisions': this.timeDivisions,
+                'drugs' : this.drugs || [{}],
+                'notificationIds' : this.notificationIds
+            }
 
-                    // Schedule the new notifications
+            this.drugService.setPrescription(this.prescriptionName, prescription).then(() => {
+            });
+
+            if (this.platform.is('cordova')) {
+                let targetIds = res? res.notificationIds : 0;
+                // 이전에 해당 처방전에서 등록한 알림이 있다면 해제합니다.
+                alert(targetIds);
+                this.localNotifications.cancel(targetIds).then(() => {
                     this.localNotifications.schedule(this.notifications);
                     this.notifications = [];
 
                     let alert = this.alertCtrl.create({
-                        title: 'Notifications set',
-                        buttons: ['Ok']
+                        title: '알람이 설정되었습니다.',
+                        buttons: ['확인']
                     });
-
                     alert.present();
                 });
             }
@@ -182,15 +188,21 @@ export class SchedulePage {
         });
     }
 
-    cancelAll() {
-        // TODO : 모든 알람이 해제되도록 구현되어 있음
-        this.localNotifications.cancelAll();
-
-        let alert = this.alertCtrl.create({
-            title: '알람이 해제되었습니다.',
-            buttons: ['Ok']
+    cancelAlarm() {
+        this.localNotifications.cancel(this.notificationIds).then(() => {
+            let alert = this.alertCtrl.create({
+                title: '알람이 해제되었습니다.',
+                buttons: ['Ok']
+            });
+            alert.present();
         });
+    }
 
-        alert.present();
+    hashFunction(prescriptionName: string) :number {
+        var hash = 5381, i = prescriptionName.length
+        while(i) {
+          hash = (hash * 33) ^ prescriptionName.charCodeAt(--i);
+        }
+        return hash >>> 0;
     }
 }
