@@ -14,7 +14,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { IonicStorageModule } from '@ionic/storage';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 
-import { DrugService } from '../pages/services/drug.service';;
+import { DrugService } from '../pages/services/drug.service';
+import { AdMobPro } from '@ionic-native/admob-pro';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { DrugService } from '../pages/services/drug.service';;
     SplashScreen,
     DrugService,
     LocalNotifications,
+    AdMobPro,
     { provide: ErrorHandler, useClass: IonicErrorHandler }
   ]
 })
