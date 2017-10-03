@@ -5,6 +5,9 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
 import { SchedulePage } from '../schedule/schedule';
 import { DrugService } from '../services/drug.service';
 
+
+
+
 @Component({
     selector: 'page-home',
     templateUrl: 'home.html'
