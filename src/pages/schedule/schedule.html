@@ -1,6 +1,8 @@
 <ion-header>
     <ion-navbar>
-        <ion-title>약드세요!</ion-title>
+        <ion-title>
+            <ion-icon color="primary" name="medkit"></ion-icon>&nbsp;
+            약드세요!</ion-title>
     </ion-navbar>
 </ion-header>
 
@@ -15,11 +17,11 @@
                 <ion-col col-1></ion-col>
                 <ion-col>
                     <ion-item>
-                        <ion-input placeholder="추가할 약품명({{i+1}})을 입력해주세요." [(ngModel)]='drug.name' (change)="addDrug(i)">
+                        <ion-input placeholder="추가할 약품명({{i+1}})" [(ngModel)]='drug.name' (ionChange)="addDrug(i)">
                         </ion-input>
                     </ion-item>
                 </ion-col>
-                <ion-col col-1>
+                <ion-col>
                     <button ion-button clear item-end [hidden]="i==0">
                         <ion-badge item-end (click)="removeDrug(i)">-</ion-badge>
                     </button>
@@ -45,13 +47,13 @@
         </ion-item>
         <ion-item>
             <h2>기간</h2>
-            <span item-end>{{ period }} 일</span>
+            <span item-end class="pr-15">{{ period }} 일</span>
         </ion-item>
         <hr>
 
         <ion-grid>
             <ion-row *ngFor="let time of timeDivisions; let i = index">
-                <ion-col col-2>
+                <ion-col>
                     <ion-item>
                         <ion-checkbox color="dark" [(ngModel)]="time.checked " checked="time.checked"></ion-checkbox>
                     </ion-item>
@@ -64,7 +66,7 @@
                         <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="time.time"></ion-datetime>
                     </ion-item>
                 </ion-col>
-                <ion-col col-1>
+                <ion-col>
                     <button ion-button clear item-end>
                         <ion-badge item-end (click)="removeTimeDivision(i)">-</ion-badge>
                     </button>

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { AlertController } from 'ionic-angular';
+import { NavController, AlertController, Platform } from 'ionic-angular';
+import { LocalNotifications } from '@ionic-native/local-notifications';
 
 import { SchedulePage } from '../schedule/schedule';
 import { DrugService } from '../services/drug.service';
@@ -15,37 +15,42 @@ export class HomePage {
     constructor(
         public navCtrl: NavController,
         private drugService: DrugService,
+        public platform: Platform, 
+        public localNotifications: LocalNotifications,
         public alertCtrl: AlertController
-    ) {}
-    
+    ) { }
+
     ionViewWillEnter() {
         this.drugService.getPerscriptions().then(res => {
             this.perscriptions = res || [];
         });
     }
 
-    alertDrugInfoByPer(perscriptionName) {
-        console.log("선택한 처방전 이름 : " + JSON.stringify(perscriptionName));
-        this.drugService.getPrescription(perscriptionName).then(res => {
-            let alert = this.alertCtrl.create({
-                title: '약품정보',
-                subTitle: res,
-                buttons: ['OK']
-            });
-            alert.present();
-        });
-    }
-
     //네비게이션 컨트롤러 기능 설정
     goToSchedulePage(prescriptionName) {
-        this.navCtrl.push(SchedulePage, { prescriptionName : prescriptionName});
+        this.navCtrl.push(SchedulePage, { prescriptionName: prescriptionName });
     }
 
-    deleteDrug(perscriptionName) {
-        // this.perscriptionName = this.perscriptionName.filter((res) => res !== perscriptionName);
+    // 처방전을 삭제합니다.
+    removePrescription(prescriptionName) {
+        if (confirm('처방전을 정말 삭제하시겠습니까?')) {
+            this.drugService.getPrescription(prescriptionName).then(res => {
+                if (res) {
+                    let notificationIds = JSON.parse(res).notificationIds;
 
-        // this.DrugService.setPerscriptions(this.perscriptionName).then(res => {
-        //     this.perscriptionName = JSON.parse(res) || [];
-        // });
+                    this.drugService.removePrescription(prescriptionName).then(() => {
+                        // 등록된 처방전을 삭제합니다.
+                        if (!this.platform.is('cordova')) {
+                            return this.ionViewWillEnter();
+                        }
+                        
+                        // 알람을 삭제합니다.
+                        this.localNotifications.cancel(notificationIds).then(() => {
+                            this.ionViewWillEnter();
+                        });
+                    });
+                }
+            });
+        }
     }
 }

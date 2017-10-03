@@ -21,4 +21,8 @@ export class DrugService {
     setPrescription(prescriptionName, prescription) {
         return this.storage.set(prescriptionName, JSON.stringify(prescription));
     }
+
+    removePrescription(prescriptionName) {
+        return this.storage.remove(prescriptionName).then();
+    }
 }

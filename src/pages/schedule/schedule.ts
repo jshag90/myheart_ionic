@@ -70,7 +70,7 @@ export class SchedulePage {
 
     addDrug(i) {
         // 마지막 필드까지 입력하였을때 약품 입력 필드를 추가함.
-        if (i == (this.drugs.length - 1) && this.drugs[i]) {
+        if (i == (this.drugs.length - 1)) {
             this.drugs.push({});
         }
     }
@@ -88,7 +88,6 @@ export class SchedulePage {
         // + - 버튼을 통한 날짜 수정
         if ('start' === dateDivision) {
             this.startDate = moment(this.startDate).add(add, 'days').format();
-            console.log(this.startDate);
         }
         else if ('end' === dateDivision) {
             this.endDate = moment(this.endDate).add(add, 'days').format();
@@ -170,7 +169,6 @@ export class SchedulePage {
             if (this.platform.is('cordova')) {
                 let targetIds = res? res.notificationIds : 0;
                 // 이전에 해당 처방전에서 등록한 알림이 있다면 해제합니다.
-                alert(targetIds);
                 this.localNotifications.cancel(targetIds).then(() => {
                     this.localNotifications.schedule(this.notifications);
                     this.notifications = [];
