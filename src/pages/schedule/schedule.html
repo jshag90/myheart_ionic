@@ -1,8 +1,8 @@
 <ion-header>
     <ion-navbar>
         <ion-title>
-            <ion-icon color="primary" name="medkit"></ion-icon>&nbsp;
-            약드세요!</ion-title>
+            <ion-icon color="primary" name="medkit"></ion-icon>&nbsp; 약드세요!
+        </ion-title>
     </ion-navbar>
 </ion-header>
 
@@ -12,22 +12,23 @@
             <ion-input placeholder="처방전 이름" [(ngModel)]='prescriptionName'>
             </ion-input>
         </ion-item>
-        <ion-grid>
+
+        <ion-item>
             <ion-row *ngFor="let drug of drugs; let i = index">
                 <ion-col col-1></ion-col>
                 <ion-col>
                     <ion-item>
-                        <ion-input placeholder="추가할 약품명({{i+1}})" [(ngModel)]='drug.name' (ionChange)="addDrug(i)">
+                        <ion-input placeholder="약품명({{i+1}})" [(ngModel)]='drug.name' (ionChange)="addDrug(i)">
                         </ion-input>
                     </ion-item>
                 </ion-col>
                 <ion-col>
                     <button ion-button clear item-end [hidden]="i==0">
-                        <ion-badge item-end (click)="removeDrug(i)">-</ion-badge>
+                        <ion-badge item-end (click)="removeDrug(i)">제거</ion-badge>
                     </button>
                 </ion-col>
             </ion-row>
-        </ion-grid>
+        </ion-item>
 
         <ion-item>
             <ion-label>시작일</ion-label>
@@ -68,13 +69,13 @@
                 </ion-col>
                 <ion-col>
                     <button ion-button clear item-end>
-                        <ion-badge item-end (click)="removeTimeDivision(i)">-</ion-badge>
+                        <ion-badge item-end (click)="removeTimeDivision(i)">제거</ion-badge>
                     </button>
                 </ion-col>
             </ion-row>
         </ion-grid>
     </ion-list>
-    <button (click)="addTimeDivision()" ion-button color="light" full>+</button>
+    <button (click)="addTimeDivision()" ion-button color="light" full>기간추가</button>
 </ion-content>
 
 <ion-footer>

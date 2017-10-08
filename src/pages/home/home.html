@@ -8,11 +8,13 @@
 </ion-header>
 
 <ion-content padding>
-    <button ion-button full (click)="goToSchedulePage()">처방전 추가</button>
+    <button ion-button full (click)="goToSchedulePage()">처방전 알람 추가</button>
     <ion-item *ngFor="let prescription of perscriptions">
-            <h2 (click)="goToSchedulePage(prescription)">{{prescription}}</h2>
-            <button ion-button clear item-end>
-                <ion-badge item-end (click)="removePrescription(prescription)">-</ion-badge>
-            </button>
+        <h2 (click)="goToSchedulePage(prescription)">{{prescription}}</h2>
+        <button ion-button clear item-end>
+                <ion-badge item-end (click)="scheduleInfo(prescription)">스케줄정보</ion-badge>
+                <ion-badge item-end (click)="removePrescription(prescription)">제거</ion-badge>
+        </button>
     </ion-item>
+
 </ion-content>
