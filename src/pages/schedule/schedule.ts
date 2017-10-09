@@ -118,7 +118,7 @@ export class SchedulePage {
 
     addPrescription() {
         if (!this.prescriptionName) {
-            alert('처방전 이름을 입력해주세요');
+            return alert('처방전 이름을 입력해주세요');
         }
 
         // 해당 처방전의 중복을 체크합니다.
@@ -134,7 +134,7 @@ export class SchedulePage {
                     // 선택한 시간에 푸시를 등록합니다.
                     if (time.checked) {
                         notificationTime.setHours(time.time.substring(0, 2));
-                        notificationTime.setMinutes(time.time.substring(3));
+                        notificationTime.setMinutes(time.time.substring(3, 5));
 
                         // 지금 시간 이후 알람만 등록합니다.
                         if(moment().toDate() <= notificationTime) {
@@ -182,7 +182,7 @@ export class SchedulePage {
             }
 
             // 메인화면으로 돌아갑니다
-            this.navCtrl.push(HomePage);
+            this.navCtrl.setRoot(HomePage);
         });
     }
 
