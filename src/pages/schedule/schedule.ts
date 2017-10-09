@@ -143,7 +143,7 @@ export class SchedulePage {
 
                             let notification = {
                                 id : notificationId,
-                                title: '약드세요',
+                                title: '약먹을시간',
                                 text: time.name + ' 약 드실 시간입니다.',
                                 at: notificationTime
                             };
